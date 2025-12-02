@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reportes y Calidad - ISAMARU</title>
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link rel="icon" href="ISAMARU PNG.png" type="image/x-icon" />
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+
+    <style>
+        :root {
+            --primary-color: #41D0E7;
+            --primary-dark: #2596A8;
+            --accent-color: #2855A8;
+        }
+
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+
+        body {
+            background: transparent !important;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .content-wrapper {
+            position: relative;
+            z-index: 10;
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .navbar-brand {
+            color: white !important;
+            font-weight: 700;
+            font-size: 1.4rem;
+        }
+
+        .nav-link {
+            color: #ffffff;
+            font-weight: 500;
+        }
+
+        .card {
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        .tabs {
+            margin-top: 10px !important;
+            margin-bottom: 20px !important;
+        }
+
+        .tab {
+            padding: 15px;
+            color: #555;
+            cursor: pointer;
+            flex: 1;
+            text-align: center;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            margin: 0 5px;
+            border-radius: 8px;
+        }
+
+        .tab.active {
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            color: white;
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .spinner-border-sm {
+            width: 1.5rem;
+            height: 1.5rem;
+        }
+    </style>
+</head>
+
+<body>
+
+<div id="particles-js"></div>
+
+<script>
+particlesJS("particles-js", {
+  "particles": {
+    "number": { "value": 60 },
+    "color": { "value": "#41D0E7" },
+    "shape": { "type": "circle" },
+    "opacity": { "value": 0.5 },
+    "size": { "value": 3 },
+    "line_linked": {
+      "enable": true,
+      "distance": 150,
+      "color": "#41D0E7",
+      "opacity": 0.4,
+      "width": 1
+    },
+    "move": { "enable": true, "speed": 3, "bounce": true }
+  }
+});
+</script>
+
+<div class="content-wrapper">
+    <nav class="navbar navbar-expand-lg sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">ISAMARU</a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="interfaz-principal.html">
+                            <i class="bi bi-house-door"></i> Inicio
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="perfil-usuario.html">
+                            <i class="bi bi-person-circle"></i> Perfil
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container py-4 flex-grow-1">
+
+        <div class="tabs mb-4 d-flex">
+            <div class="tab active" onclick="showTab('reportes')">
+                <i class="bi bi-file-earmark-text"></i> Reportes de Consumo
+            </div>
+
+            <div class="tab" onclick="showTab('calidad')">
+                <i class="bi bi-check-circle"></i> Revisión de Calidad
+            </div>
+        </div>
+
+        <div class="content">
+
+            <!-- REPORTES -->
+            <div id="reportes">
+                <h2 class="fw-bold mb-4">Reportes de Consumo</h2>
+
+                <!-- Estadísticas -->
+                <div class="row mb-4">
+                    <div class="col-md-3">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <h5 class="card-title">Total Consumos</h5>
+                                <h2 id="totalConsumos" class="text-primary">-</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <h5 class="card-title">Productos Activos</h5>
+                                <h2 id="productosActivos" class="text-success">-</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <h5 class="card-title">Alertas</h5>
+                                <h2 id="alertasActivas" class="text-warning">-</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <h5 class="card-title">Por Caducar</h5>
+                                <h2 id="porCaducar" class="text-danger">-</h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tabla de Consumos -->
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Historial de Consumos</h5>
+                        <button class="btn btn-sm btn-primary" onclick="cargarConsumos()">
+                            <i class="bi bi-arrow-clockwise"></i> Actualizar
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div id="loadingConsumos" class="text-center py-4">
+                            <div class="spinner-border text-primary" role="status"></div>
+                            <p class="mt-2">Cargando consumos...</p>
+                        </div>
+
+                        <table class="table table-hover d-none" id="tablaConsumos">
+                            <thead>
+                                <tr>
+                                    <th>Fecha</th>
+                                    <th>Usuario</th>
+                                    <th>Producto</th>
+                                    <th>Cantidad</th>
+                                    <th>Categoría</th>
+                                    <th>Motivo</th>
+                                </tr>
+                            </thead>
+                            <tbody id="consumosBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CALIDAD -->
+            <div id="calidad" class="hidden">
+                <h2 class="fw-bold mb-4">Revisiones de Calidad</h2>
+
+                <div id="loadingCalidad" class="text-center py-4">
+                    <div class="spinner-border text-primary" role="status"></div>
+                    <p class="mt-2">Cargando revisiones...</p>
+                </div>
+
+                <div class="row" id="revisionesContainer"></div>
+            </div>
+
+        </div>
+    </div>
+
+    <footer class="footer py-4 bg-white border-top mt-auto">
+        <div class="container text-center">
+            <p class="mb-0 text-muted">© 2025 ISAMARU.</p>
+        </div>
+    </footer>
+
+</div>
+
+<script>
+    const API_URL = 'http://localhost:3000';
+
+    // ===== CAMBIAR ENTRE TABS =====
+    function showTab(tabName) {
+        document.getElementById('reportes').classList.add('hidden');
+        document.getElementById('calidad').classList.add('hidden');
+
+        document.getElementById(tabName).classList.remove('hidden');
+
+        const tabs = document.querySelectorAll('.tab');
+        tabs.forEach(tab => tab.classList.remove('active'));
+
+        if (tabName === 'reportes') {
+            tabs[0].classList.add('active');
+            cargarEstadisticas();
+            cargarConsumos();
+        } else {
+            tabs[1].classList.add('active');
+            cargarRevisiones();
+        }
+    }
+
+    // ===== CARGAR ESTADÍSTICAS =====
+    async function cargarEstadisticas() {
+        try {
+            const response = await fetch(`${API_URL}/reportes/estadisticas`);
+            const data = await response.json();
+
+            document.getElementById('totalConsumos').textContent = data.consumos_mes || 0;
+            document.getElementById('productosActivos').textContent = data.productos_activos || 0;
+            document.getElementById('alertasActivas').textContent = data.alertas_activas || 0;
+            document.getElementById('porCaducar').textContent = data.productos_por_caducar || 0;
+
+        } catch (error) {
+            console.error('Error al cargar estadísticas:', error);
+        }
+    }
+
+    // ===== CARGAR CONSUMOS =====
+    async function cargarConsumos() {
+        const loading = document.getElementById('loadingConsumos');
+        const tabla = document.getElementById('tablaConsumos');
+        const tbody = document.getElementById('consumosBody');
+
+        loading.classList.remove('d-none');
+        tabla.classList.add('d-none');
+
+        try {
+            const response = await fetch(`${API_URL}/reportes/consumos`);
+            const consumos = await response.json();
+
+            tbody.innerHTML = '';
+
+            if (consumos.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted">No hay consumos registrados</td></tr>';
+            } else {
+                consumos.forEach(consumo => {
+                    const fecha = new Date(consumo.fecha_consumo).toLocaleDateString('es-CO');
+                    
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>${fecha}</td>
+                            <td>${consumo.usuario || 'N/A'}</td>
+                            <td>${consumo.alimento || 'N/A'}</td>
+                            <td>${consumo.cantidad || 0}</td>
+                            <td><span class="badge bg-info">${consumo.categoria || 'N/A'}</span></td>
+                            <td>${consumo.motivo || 'N/A'}</td>
+                        </tr>
+                    `;
+                });
+            }
+
+            loading.classList.add('d-none');
+            tabla.classList.remove('d-none');
+
+        } catch (error) {
+            console.error('Error al cargar consumos:', error);
+            tbody.innerHTML = '<tr><td colspan="6" class="text-center text-danger">Error al cargar datos</td></tr>';
+            loading.classList.add('d-none');
+            tabla.classList.remove('d-none');
+        }
+    }
+
+    // ===== CARGAR REVISIONES DE CALIDAD =====
+    async function cargarRevisiones() {
+        const loading = document.getElementById('loadingCalidad');
+        const container = document.getElementById('revisionesContainer');
+
+        loading.classList.remove('d-none');
+        container.innerHTML = '';
+
+        try {
+            const response = await fetch(`${API_URL}/calidad/revisiones/pendientes`);
+            const data = await response.json();
+            const revisiones = data.revisiones || [];
+
+            if (revisiones.length === 0) {
+                container.innerHTML = '<div class="col-12 text-center text-muted py-5"><p>No hay revisiones pendientes</p></div>';
+            } else {
+                revisiones.forEach(revision => {
+                    container.innerHTML += `
+                        <div class="col-md-6 mb-4">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between mb-3">
+                                        <h3 class="card-title">${revision.nombre_producto}</h3>
+                                        <div class="feature-icon">${revision.icono || '📦'}</div>
+                                    </div>
+
+                                    <p><strong>Recibido:</strong> ${new Date(revision.fecha_recepcion).toLocaleDateString('es-CO')}</p>
+                                    <p><strong>Cantidad:</strong> ${revision.cantidad_revisada} ${revision.unidad}</p>
+                                    <p><strong>Inspector:</strong> ${revision.inspector || 'N/A'}</p>
+                                    <p><strong>Estado:</strong> <span class="badge bg-warning">${revision.estado}</span></p>
+
+                                    <div class="d-flex gap-2">
+                                        <button class="btn btn-success" onclick="actualizarRevision(${revision.id_revision}, 'aceptado')">
+                                            <i class="bi bi-check-circle"></i> Aceptar
+                                        </button>
+                                        <button class="btn btn-danger" onclick="rechazarRevision(${revision.id_revision})">
+                                            <i class="bi bi-x-circle"></i> Rechazar
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+
+            loading.classList.add('d-none');
+
+        } catch (error) {
+            console.error('Error al cargar revisiones:', error);
+            container.innerHTML = '<div class="col-12 text-center text-danger py-5"><p>Error al cargar revisiones</p></div>';
+            loading.classList.add('d-none');
+        }
+    }
+
+    // ===== ACTUALIZAR REVISIÓN =====
+    async function actualizarRevision(id, estado) {
+        try {
+            const response = await fetch(`${API_URL}/calidad/revisiones/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    estado: estado,
+                    observaciones: estado === 'aceptado' ? 'Producto aceptado' : 'Producto rechazado',
+                    defectos_encontrados: 0
+                })
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                alert(`✅ Revisión ${estado} exitosamente`);
+                cargarRevisiones();
+            } else {
+                alert('❌ Error al actualizar revisión');
+            }
+
+        } catch (error) {
+            console.error('Error:', error);
+            alert('❌ Error al conectar con el servidor');
+        }
+    }
+
+    // ===== RECHAZAR REVISIÓN =====
+    async function rechazarRevision(id) {
+        const motivo = prompt('Describe el motivo del rechazo:');
+        if (!motivo) return;
+
+        try {
+            const response = await fetch(`${API_URL}/calidad/revisiones/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    estado: 'rechazado',
+                    observaciones: motivo,
+                    defectos_encontrados: 1
+                })
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                alert('✅ Revisión rechazada exitosamente');
+                cargarRevisiones();
+            } else {
+                alert('❌ Error al actualizar revisión');
+            }
+
+        } catch (error) {
+            console.error('Error:', error);
+            alert('❌ Error al conectar con el servidor');
+        }
+    }
+
+    // ===== CARGAR DATOS AL INICIAR =====
+    window.addEventListener('DOMContentLoaded', () => {
+        cargarEstadisticas();
+        cargarConsumos();
+    });
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

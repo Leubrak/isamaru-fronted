@@ -1,0 +1,759 @@
+<!DOCTYPE html> 
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Inventario de Alimentos - Isamaru</title>
+
+  <!-- Bootstrap -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css" rel="stylesheet">
+
+  <!-- Fondo partículas -->
+  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+
+  <style>
+    /* ======= VARIABLES ======= */
+    :root {
+      --primary-color: #41D0E7;
+      --primary-dark: #2596A8;
+      --accent-color: #2855A8;
+      --light-bg: #F5FCFD;
+    }
+
+    /* ======= FONDO PARTÍCULAS ======= */
+    #particles-js {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      z-index: -1;
+    }
+
+    /* ======= GENERAL ======= */
+    body {
+      background: transparent !important;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .content-wrapper {
+      position: relative;
+      z-index: 10;
+    }
+
+    /* ======= NAVBAR ======= */
+    .navbar {
+      background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+    .navbar-brand span {
+      color: #ffffff;
+      font-weight: bold;
+    }
+
+    .nav-link {
+      color: #ffffff;
+      font-weight: 500;
+    }
+
+    .nav-link:hover, .nav-link.active {
+      color: #ffffff;
+      opacity: 0.8;
+    }
+
+    /* ======= ELEMENTOS ======= */
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+      border: none;
+    }
+
+    .btn-primary:hover {
+      background: linear-gradient(135deg, var(--primary-dark), var(--accent-color));
+      transform: translateY(-2px);
+      transition: all 0.3s;
+    }
+
+    .card {
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      background: white;
+    }
+
+    .table thead {
+      background-color: var(--primary-color);
+      color: white;
+    }
+
+    .table tbody tr:hover {
+      background-color: rgba(65, 208, 231, 0.05);
+    }
+
+    /* Alertas y notificaciones */
+    .alert-custom {
+      position: fixed;
+      top: 80px;
+      right: 20px;
+      z-index: 9999;
+      min-width: 300px;
+      animation: slideIn 0.3s ease-out;
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: translateX(400px);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    /* Estados de caducidad */
+    .caducado {
+      background-color: #f8d7da !important;
+      color: #721c24;
+    }
+
+    .por-caducar {
+      background-color: #fff3cd !important;
+      color: #856404;
+    }
+
+    /* Loading spinner */
+    .loading {
+      display: none;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .loading.active {
+      display: block;
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- Fondo animado -->
+<div id="particles-js"></div>
+
+<script>
+particlesJS("particles-js", {
+  "particles": {
+    "number": { "value": 60 },
+    "color": { "value": "#41D0E7" },
+    "shape": { "type": "circle" },
+    "opacity": { "value": 0.5 },
+    "size": { "value": 3 },
+    "line_linked": {
+      "enable": true,
+      "distance": 150,
+      "color": "#41D0E7",
+      "opacity": 0.4,
+      "width": 1
+    },
+    "move": { "enable": true, "speed": 3, "bounce": true }
+  },
+  "interactivity": {
+    "events": {
+      "onhover": { "enable": true, "mode": "repulse" },
+      "onclick": { "enable": true, "mode": "push" }
+    },
+    "modes": {
+      "repulse": { "distance": 100 },
+      "push": { "particles_nb": 4 }
+    }
+  },
+  "retina_detect": true
+});
+</script>
+
+<!-- Contenedor de alertas -->
+<div id="alertContainer"></div>
+
+<!-- CONTENIDO REAL -->
+<div class="content-wrapper">
+
+<nav class="navbar navbar-expand-lg sticky-top">
+  <div class="container">
+    <a class="navbar-brand" href="#"><span>ISAMARU</span></a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link" href="interfaz-principal.html"><i class="bi bi-house-door"></i> Inicio</a></li>
+        <li class="nav-item"><a class="nav-link" href="perfil-usuario.html"><i class="bi bi-person-circle"></i> Perfil</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container my-5">
+
+  <h2 class="mb-4 fw-bold" style="color: var(--accent-color);">Registro de Inventario de Alimentos</h2>
+
+  <form id="inventarioForm" class="card p-4 mb-5">
+    <div class="row g-3">
+
+      <div class="col-md-6">
+        <label class="form-label">Nombre del Producto</label>
+        <input type="text" id="nombre" name="nombre" class="form-control" required>
+      </div>
+
+      <div class="col-md-6">
+        <label class="form-label">Proveedor</label>
+        <input type="text" id="proveedor" name="proveedor" class="form-control">
+      </div>
+
+      <div class="col-md-4">
+        <label class="form-label">Categoría</label>
+        <select id="categoria" name="categoria" class="form-select" required>
+          <option value="">Cargando...</option>
+        </select>
+      </div>
+
+      <div class="col-md-4">
+        <label class="form-label">Cantidad</label>
+        <input type="number" id="cantidad" name="cantidad" class="form-control" min="0" step="0.01" required>
+      </div>
+
+      <div class="col-md-4">
+        <label class="form-label">Unidad de Medida</label>
+        <select id="unidad" name="unidad" class="form-select" required>
+          <option value="">Cargando...</option>
+        </select>
+      </div>
+
+      <div class="col-md-6">
+        <label class="form-label">Fecha de Recepción</label>
+        <input type="date" id="fecha_recepcion" name="fecha_recepcion" class="form-control">
+      </div>
+
+      <div class="col-md-6">
+        <label class="form-label">Fecha de Caducidad</label>
+        <input type="date" id="fecha_caducidad" name="fecha_caducidad" class="form-control">
+      </div>
+
+      <div class="col-md-4">
+        <label class="form-label">Número de Lote</label>
+        <input type="text" id="numero_lote" name="numero_lote" class="form-control">
+      </div>
+
+      <div class="col-md-4">
+        <label class="form-label">Defectos</label>
+        <input type="number" id="defectos" name="defectos" class="form-control" min="0" value="0">
+      </div>
+
+      <div class="col-md-4">
+        <label class="form-label">Inspector</label>
+        <input type="text" id="inspector" name="inspector" class="form-control">
+      </div>
+
+      <div class="col-12">
+        <label class="form-label">Comentarios Adicionales</label>
+        <textarea id="comentarios" name="comentarios" class="form-control" rows="2"></textarea>
+      </div>
+
+      <div class="col-12">
+        <label class="form-label">Subir Archivos</label>
+        <input type="file" class="form-control">
+        <small class="text-muted">Funcionalidad de subida de archivos próximamente</small>
+      </div>
+
+    </div>
+
+    <div class="mt-4">
+      <button type="submit" class="btn btn-primary" id="btnSubmit">
+        <i class="bi bi-save"></i> Guardar Registro
+      </button>
+      <button type="button" class="btn btn-secondary ms-2" onclick="cancelarEdicion()">
+        <i class="bi bi-x-circle"></i> Cancelar
+      </button>
+    </div>
+  </form>
+
+  <!-- Filtros -->
+  <div class="card p-3 mb-3">
+    <div class="row g-2">
+      <div class="col-md-4">
+        <input type="text" id="buscar" class="form-control" placeholder="🔍 Buscar producto...">
+      </div>
+      <div class="col-md-3">
+        <select id="filtroCategoria" class="form-select">
+          <option value="">Todas las categorías</option>
+        </select>
+      </div>
+      <div class="col-md-3">
+        <select id="filtroEstado" class="form-select">
+          <option value="">Todos los estados</option>
+          <option value="activo">Activos</option>
+          <option value="agotado">Agotados</option>
+        </select>
+      </div>
+      <div class="col-md-2">
+        <button class="btn btn-primary w-100" onclick="aplicarFiltros()">
+          <i class="bi bi-funnel"></i> Filtrar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <h3 class="mb-3 fw-bold">
+    Registros Guardados 
+    <span class="badge bg-primary" id="totalProductos">0</span>
+  </h3>
+
+  <!-- Loading -->
+  <div class="loading" id="loading">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Cargando...</span>
+    </div>
+    <p>Cargando productos...</p>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table table-bordered align-middle">
+      <thead>
+        <tr>
+          <th>Producto</th>
+          <th>Proveedor</th>
+          <th>Categoría</th>
+          <th>Cantidad</th>
+          <th>Recepción</th>
+          <th>Caducidad</th>
+          <th>Inspector</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody id="tablaRegistros">
+        <tr>
+          <td colspan="8" class="text-center">No hay productos registrados</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+</div><!-- end content wrapper -->
+
+<!-- JavaScript de integración con backend -->
+<script>
+// Configuración de la API
+const API_URL = 'http://localhost:3000';
+let editandoId = null;
+
+// ═══════════════════════════════════════════════════════════
+// 🚀 INICIALIZACIÓN
+// ═══════════════════════════════════════════════════════════
+
+document.addEventListener('DOMContentLoaded', async () => {
+  console.log('🍽️ Isamaru Frontend iniciado');
+  
+  // Cargar datos iniciales
+  await cargarCategorias();
+  await cargarUnidades();
+  await cargarProductos();
+  
+  // Configurar formulario
+  const form = document.getElementById('inventarioForm');
+  form.addEventListener('submit', guardarProducto);
+  
+  // Configurar fecha actual por defecto
+  const hoy = new Date().toISOString().split('T')[0];
+  document.getElementById('fecha_recepcion').value = hoy;
+});
+
+// ═══════════════════════════════════════════════════════════
+// 📋 CARGAR CATEGORÍAS
+// ═══════════════════════════════════════════════════════════
+
+async function cargarCategorias() {
+  try {
+    const response = await fetch(`${API_URL}/productos/categorias/lista`);
+    const data = await response.json();
+    
+    if (data.success) {
+      const select = document.getElementById('categoria');
+      const filtroSelect = document.getElementById('filtroCategoria');
+      
+      select.innerHTML = '<option value="">Seleccione una categoría</option>';
+      filtroSelect.innerHTML = '<option value="">Todas las categorías</option>';
+      
+      data.categorias.forEach(cat => {
+        const option = document.createElement('option');
+        option.value = cat.id_categoria;
+        option.textContent = cat.nombre;
+        select.appendChild(option);
+        
+        const optionFiltro = option.cloneNode(true);
+        filtroSelect.appendChild(optionFiltro);
+      });
+      
+      console.log(`✅ ${data.categorias.length} categorías cargadas`);
+    }
+  } catch (error) {
+    console.error('❌ Error cargando categorías:', error);
+    mostrarAlerta('Error al cargar categorías', 'danger');
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+// 📏 CARGAR UNIDADES
+// ═══════════════════════════════════════════════════════════
+
+async function cargarUnidades() {
+  try {
+    const response = await fetch(`${API_URL}/productos/unidades/lista`);
+    const data = await response.json();
+    
+    if (data.success) {
+      const select = document.getElementById('unidad');
+      select.innerHTML = '';
+      
+      data.unidades.forEach(unidad => {
+        const option = document.createElement('option');
+        option.value = unidad.abreviatura;
+        option.textContent = `${unidad.nombre} (${unidad.abreviatura})`;
+        select.appendChild(option);
+      });
+      
+      console.log(`✅ ${data.unidades.length} unidades cargadas`);
+    }
+  } catch (error) {
+    console.error('❌ Error cargando unidades:', error);
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+// 📦 CARGAR PRODUCTOS
+// ═══════════════════════════════════════════════════════════
+
+async function cargarProductos(filtros = {}) {
+  const loading = document.getElementById('loading');
+  const tabla = document.getElementById('tablaRegistros');
+  
+  loading.classList.add('active');
+  
+  try {
+    let url = `${API_URL}/productos`;
+    const params = new URLSearchParams();
+    
+    if (filtros.categoria) params.append('categoria', filtros.categoria);
+    if (filtros.estado) params.append('estado', filtros.estado);
+    if (filtros.buscar) params.append('buscar', filtros.buscar);
+    
+    if (params.toString()) url += `?${params.toString()}`;
+    
+    const response = await fetch(url);
+    const data = await response.json();
+    
+    if (data.success) {
+      mostrarProductosEnTabla(data.data);
+      document.getElementById('totalProductos').textContent = data.count;
+      console.log(`✅ ${data.count} productos cargados`);
+    }
+  } catch (error) {
+    console.error('❌ Error cargando productos:', error);
+    tabla.innerHTML = '<tr><td colspan="8" class="text-center text-danger">Error al cargar productos</td></tr>';
+    mostrarAlerta('Error al cargar productos del servidor', 'danger');
+  } finally {
+    loading.classList.remove('active');
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+// 📊 MOSTRAR PRODUCTOS EN TABLA
+// ═══════════════════════════════════════════════════════════
+
+function mostrarProductosEnTabla(productos) {
+  const tbody = document.getElementById('tablaRegistros');
+  
+  if (productos.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="8" class="text-center">No hay productos registrados</td></tr>';
+    return;
+  }
+  
+  tbody.innerHTML = '';
+  
+  productos.forEach(producto => {
+    const tr = document.createElement('tr');
+    
+    let claseEstado = '';
+    if (producto.estado_caducidad === 'Caducado') {
+      claseEstado = 'caducado';
+    } else if (producto.estado_caducidad === 'Por caducar') {
+      claseEstado = 'por-caducar';
+    }
+    
+    tr.innerHTML = `
+      <td>${producto.nombre}</td>
+      <td>${producto.proveedor || '-'}</td>
+      <td>${producto.categoria || '-'}</td>
+      <td><strong>${producto.cantidad}</strong> ${producto.unidad || ''}</td>
+      <td>${formatearFecha(producto.fecha_recepcion)}</td>
+      <td class="${claseEstado}">${formatearFecha(producto.fecha_caducidad)}</td>
+      <td>${producto.inspector || '-'}</td>
+      <td class="text-nowrap">
+        <button class="btn btn-sm btn-info" onclick="verProducto(${producto.id_producto})" title="Ver detalles">
+          <i class="bi bi-eye"></i>
+        </button>
+        <button class="btn btn-sm btn-warning" onclick="editarProducto(${producto.id_producto})" title="Editar">
+          <i class="bi bi-pencil"></i>
+        </button>
+        <button class="btn btn-sm btn-danger" onclick="eliminarProducto(${producto.id_producto}, '${producto.nombre}')" title="Eliminar">
+          <i class="bi bi-trash"></i>
+        </button>
+      </td>
+    `;
+    
+    tbody.appendChild(tr);
+  });
+}
+
+// ═══════════════════════════════════════════════════════════
+// ➕ GUARDAR PRODUCTO (CREAR O ACTUALIZAR)
+// ═══════════════════════════════════════════════════════════
+
+async function guardarProducto(event) {
+  event.preventDefault();
+  
+  const btnSubmit = document.getElementById('btnSubmit');
+  const textoOriginal = btnSubmit.innerHTML;
+  btnSubmit.disabled = true;
+  btnSubmit.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Guardando...';
+  
+  const formData = new FormData(event.target);
+  
+  const producto = {
+    nombre: formData.get('nombre'),
+    proveedor: formData.get('proveedor') || null,
+    id_categoria: parseInt(formData.get('categoria')),
+    cantidad: parseFloat(formData.get('cantidad')),
+    unidad: formData.get('unidad'),
+    fecha_recepcion: formData.get('fecha_recepcion') || null,
+    fecha_caducidad: formData.get('fecha_caducidad') || null,
+    numero_lote: formData.get('numero_lote') || null,
+    defectos: parseInt(formData.get('defectos') || 0),
+    inspector: formData.get('inspector') || null,
+    comentarios: formData.get('comentarios') || null
+  };
+  
+  try {
+    const esEdicion = editandoId !== null;
+    const url = esEdicion ? `${API_URL}/productos/${editandoId}` : `${API_URL}/productos`;
+    const method = esEdicion ? 'PUT' : 'POST';
+    
+    const response = await fetch(url, {
+      method: method,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(producto)
+    });
+    
+    const data = await response.json();
+    
+    if (data.success) {
+      mostrarAlerta(
+        esEdicion ? '✅ Producto actualizado exitosamente' : '✅ Producto creado exitosamente',
+        'success'
+      );
+      
+      event.target.reset();
+      cancelarEdicion();
+      await cargarProductos();
+      
+      // Scroll a la tabla
+      document.getElementById('tablaRegistros').scrollIntoView({ behavior: 'smooth' });
+    } else {
+      mostrarAlerta('❌ ' + (data.error || 'Error al guardar el producto'), 'danger');
+    }
+  } catch (error) {
+    console.error('❌ Error:', error);
+    mostrarAlerta('❌ Error de conexión con el servidor', 'danger');
+  } finally {
+    btnSubmit.disabled = false;
+    btnSubmit.innerHTML = textoOriginal;
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+// 👁️ VER PRODUCTO
+// ═══════════════════════════════════════════════════════════
+
+async function verProducto(id) {
+  try {
+    const response = await fetch(`${API_URL}/productos/${id}`);
+    const data = await response.json();
+    
+    if (data.success) {
+      const p = data.producto;
+      const historial = data.historial.map(m => 
+        `• ${m.tipo.toUpperCase()}: ${m.cantidad} ${p.unidad || ''} - ${formatearFecha(m.fecha)}`
+      ).join('\n') || 'Sin movimientos registrados';
+      
+      alert(`
+📦 PRODUCTO: ${p.nombre}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🏢 Proveedor: ${p.proveedor || 'N/A'}
+📂 Categoría: ${p.categoria_nombre || 'N/A'}
+📊 Cantidad: ${p.cantidad} ${p.unidad || ''}
+📅 Recepción: ${formatearFecha(p.fecha_recepcion)}
+⏰ Caducidad: ${formatearFecha(p.fecha_caducidad)}
+🔢 Lote: ${p.numero_lote || 'N/A'}
+⚠️ Defectos: ${p.defectos}
+👤 Inspector: ${p.inspector || 'N/A'}
+💬 Comentarios: ${p.comentarios || 'Sin comentarios'}
+📌 Estado: ${p.estado}
+
+📋 HISTORIAL DE MOVIMIENTOS:
+${historial}
+      `);
+    }
+  } catch (error) {
+    console.error('❌ Error:', error);
+    mostrarAlerta('Error al obtener detalles del producto', 'danger');
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+// ✏️ EDITAR PRODUCTO
+// ═══════════════════════════════════════════════════════════
+
+async function editarProducto(id) {
+  try {
+    const response = await fetch(`${API_URL}/productos/${id}`);
+    const data = await response.json();
+    
+    if (data.success) {
+      const p = data.producto;
+      
+      document.getElementById('nombre').value = p.nombre;
+      document.getElementById('proveedor').value = p.proveedor || '';
+      document.getElementById('categoria').value = p.id_categoria;
+      document.getElementById('cantidad').value = p.cantidad;
+      document.getElementById('unidad').value = p.unidad || '';
+      document.getElementById('fecha_recepcion').value = p.fecha_recepcion?.split('T')[0] || '';
+      document.getElementById('fecha_caducidad').value = p.fecha_caducidad?.split('T')[0] || '';
+      document.getElementById('numero_lote').value = p.numero_lote || '';
+      document.getElementById('defectos').value = p.defectos || 0;
+      document.getElementById('inspector').value = p.inspector || '';
+      document.getElementById('comentarios').value = p.comentarios || '';
+      
+      editandoId = id;
+      
+      const btnSubmit = document.getElementById('btnSubmit');
+      btnSubmit.innerHTML = '<i class="bi bi-pencil"></i> Actualizar Producto';
+      btnSubmit.classList.remove('btn-primary');
+      btnSubmit.classList.add('btn-warning');
+      
+      document.getElementById('inventarioForm').scrollIntoView({ behavior: 'smooth' });
+      mostrarAlerta('Editando producto. Realiza los cambios y haz clic en Actualizar.', 'info');
+    }
+  } catch (error) {
+    console.error('❌ Error:', error);
+    mostrarAlerta('Error al cargar el producto', 'danger');
+  }
+}
+
+function cancelarEdicion() {
+  editandoId = null;
+  const btnSubmit = document.getElementById('btnSubmit');
+  btnSubmit.innerHTML = '<i class="bi bi-save"></i> Guardar Registro';
+  btnSubmit.classList.remove('btn-warning');
+  btnSubmit.classList.add('btn-primary');
+  document.getElementById('inventarioForm').reset();
+}
+
+// ═══════════════════════════════════════════════════════════
+// 🗑️ ELIMINAR PRODUCTO
+// ═══════════════════════════════════════════════════════════
+
+async function eliminarProducto(id, nombre) {
+  if (!confirm(`¿Estás seguro de eliminar el producto "${nombre}"?`)) {
+    return;
+  }
+  
+  try {
+    const response = await fetch(`${API_URL}/productos/${id}`, {
+      method: 'DELETE'
+    });
+    
+    const data = await response.json();
+    
+    if (data.success) {
+      mostrarAlerta('✅ Producto eliminado exitosamente', 'success');
+      await cargarProductos();
+    } else {
+      mostrarAlerta('❌ ' + (data.error || 'Error al eliminar'), 'danger');
+    }
+  } catch (error) {
+    console.error('❌ Error:', error);
+    mostrarAlerta('❌ Error de conexión', 'danger');
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+// 🔍 FILTROS
+// ═══════════════════════════════════════════════════════════
+
+function aplicarFiltros() {
+  const buscar = document.getElementById('buscar').value;
+  const categoria = document.getElementById('filtroCategoria').value;
+  const estado = document.getElementById('filtroEstado').value;
+  
+  const categoriaTexto = categoria ? 
+    document.querySelector(`#filtroCategoria option[value="${categoria}"]`).textContent : 
+    null;
+  
+  cargarProductos({
+    buscar,
+    categoria: categoriaTexto,
+    estado
+  });
+}
+
+// Enter en búsqueda
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('buscar')?.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') aplicarFiltros();
+  });
+});
+
+// ═══════════════════════════════════════════════════════════
+// 🛠️ UTILIDADES
+// ═══════════════════════════════════════════════════════════
+
+function formatearFecha(fecha) {
+  if (!fecha) return '-';
+  const d = new Date(fecha);
+  return d.toLocaleDateString('es-CO', { year: 'numeric', month: '2-digit', day: '2-digit' });
+}
+
+function mostrarAlerta(mensaje, tipo = 'info') {
+  const container = document.getElementById('alertContainer');
+  
+  const alert = document.createElement('div');
+  alert.className = `alert alert-${tipo} alert-dismissible fade show alert-custom`;
+  alert.innerHTML = `
+    ${mensaje}
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+  `;
+  
+  container.appendChild(alert);
+  
+  setTimeout(() => {
+    alert.remove();
+  }, 5000);
+}
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

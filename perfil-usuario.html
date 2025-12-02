@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Speedy - Perfil de Usuario</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
+    <link rel="icon" href="ISAMARU PNG.png" type="image/x-icon" />
+
+    <style>
+        :root {
+            --primary-color: #41D0E7;
+            --primary-dark: #2596A8;
+            --accent-color: #2855A8;
+            --light-bg: #F5FCFD;
+        }
+        
+        body {
+            background-color: var(--light-bg);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* 🎇 PARTICLES.JS FONDO */
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+
+        /* NAVBAR */
+        .navbar {
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            z-index: 10;
+        }
+        
+        .navbar-brand {
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: white !important;
+        }
+        
+        .nav-link {
+            color: #ffffff;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            color: var(--primary-dark);
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            height: calc(100vh - 100px);
+            position: sticky;
+            top: 80px;
+            padding-top: 1rem;
+            z-index: 2;
+        }
+        
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1.5rem;
+            color: #555;
+            border-radius: 8px;
+            margin: 0.5rem 1rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar-link:hover, .sidebar-link.active {
+            background-color: var(--light-bg);
+            color: var(--primary-dark);
+        }
+        
+        .sidebar-link i {
+            margin-right: 10px;
+        }
+
+        /* CARDS */
+        .card {
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: none;
+            margin-bottom: 20px;
+            background-color: #fff;
+            z-index: 2;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+        }
+        
+        .card-header {
+            background-color: white;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            font-weight: 600;
+            font-size: 1.2rem;
+            color: var(--primary-dark);
+            border-radius: 12px 12px 0 0 !important;
+            padding: 1rem 1.5rem;
+        }
+
+        .feature-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            font-size: 20px;
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            font-weight: bold;
+            color: var(--accent-color);
+        }
+
+        label {
+            font-weight: 600;
+        }
+
+        .btn-danger:hover {
+            background-color: #b02a37;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- PARTICLES.JS BACKGROUND -->
+    <div id="particles-js"></div>
+
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">ISAMARU</a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="interfaz-principal.html"><i class="bi bi-house-door"></i> Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="perfil-usuario.html"><i class="bi bi-person-circle"></i> Perfil</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- CONTENIDO -->
+    <div class="container-fluid py-4">
+        <div class="row">
+
+            <!-- SIDEBAR -->
+            <div class="col-lg-3 col-md-4 mb-4">
+                <div class="sidebar">
+                    <div class="text-center mb-4">
+                        <div class="feature-icon mx-auto">
+                            <i class="bi bi-person-circle"></i>
+                        </div>
+                        <div class="mt-2 fw-bold" style="color: var(--primary-dark);">Perfil</div>
+                    </div>
+
+                    <a href="interfaz-principal.html" class="sidebar-link">
+                        <i class="bi bi-house-door"></i> Inicio
+                    </a>
+                    <a href="perfil-usuario.html" class="sidebar-link active">
+                        <i class="bi bi-person-circle"></i> Perfil de Usuario
+                    </a>
+                    <a href="index.html" class="sidebar-link">
+                        <i class="bi bi-door-open-fill"></i> Cerrar sesión
+                    </a>
+                </div>
+            </div>
+
+            <!-- MAIN CONTENT -->
+            <div class="col-lg-9 col-md-8">
+
+                <h3 class="section-title mb-4">
+                    <div class="feature-icon me-2">
+                        <i class="bi bi-person-circle"></i>
+                    </div>
+                    Perfil de Usuario
+                </h3>
+
+                <!-- Información Personal -->
+                <div class="card">
+                    <div class="card-header">Información Personal</div>
+                    <div class="card-body">
+                        <form id="formInfoPersonal">
+                            <div class="mb-3">
+                                <label class="form-label">Nombre completo</label>
+                                <input type="text" class="form-control" value="Juan Pérez" required />
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Correo electrónico</label>
+                                <input type="email" class="form-control" value="juan.perez@email.com" required />
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Teléfono</label>
+                                <input type="tel" class="form-control" value="+57 300 123 4567" />
+                            </div>
+
+                            <button class="btn btn-primary">Actualizar Información</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Rol -->
+                <div class="card">
+                    <div class="card-header">Rol del Usuario</div>
+                    <div class="card-body">
+                        <p><strong>Rol actual:</strong> <span class="badge bg-primary">Administrador</span></p>
+                    </div>
+                </div>
+
+                <!-- Configuración -->
+                <div class="card mb-4">
+                    <div class="card-header">Configuraciones</div>
+                    <div class="card-body">
+                        <form id="formConfiguracion">
+
+                            <div class="mb-3">
+                                <label class="form-label">Idioma</label>
+                                <select class="form-select">
+                                    <option selected>Español</option>
+                                    <option>Inglés</option>
+                                    <option>Francés</option>
+                                    <option>Alemán</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Cambiar Contraseña</label><br>
+                                <a href="enter-new-password.html" class="fw-semibold text-decoration-none"
+                                   style="color: var(--primary-color);">
+                                   <i class="bi bi-key-fill"></i> Cambiar contraseña
+                                </a>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Ajustes de Privacidad</label>
+                                <select class="form-select">
+                                    <option>Público</option>
+                                    <option selected>Privado</option>
+                                    <option>Solo Amigos</option>
+                                </select>
+                            </div>
+
+                            <button class="btn btn-primary me-3">Guardar Cambios</button>
+                            <button type="button" id="btnEliminarCuenta" class="btn btn-danger">Eliminar Cuenta</button>
+
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+
+    <!-- 🎇 LIBRERÍA PARTICLES.JS -->
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+
+    <!-- 🎇 CONFIGURACIÓN DE LAS MOLÉCULAS -->
+    <script>
+        particlesJS("particles-js", {
+            particles: {
+                number: { value: 60 },
+                color: { value: "#41D0E7" },
+                shape: { type: "circle" },
+                opacity: { value: 0.25 },
+                size: { value: 5, random: true },
+                move: {
+                    enable: true,
+                    speed: 1.5,
+                    direction: "none",
+                    random: true,
+                    straight: false,
+                    out_mode: "out"
+                },
+                line_linked: {
+                    enable: false
+                }
+            }
+        });
+
+        document.getElementById("formInfoPersonal").addEventListener("submit", function(e) {
+            e.preventDefault();
+            alert("Información personal actualizada correctamente ✅");
+        });
+
+        document.getElementById("formConfiguracion").addEventListener("submit", function(e) {
+            e.preventDefault();
+            alert("Configuración guardada correctamente ✅");
+        });
+
+        document.getElementById("btnEliminarCuenta").addEventListener("click", function() {
+            if (confirm("¿Estás seguro que deseas eliminar tu cuenta? Esta acción no se puede deshacer.")) {
+                alert("Cuenta eliminada 😢");
+            }
+        });
+    </script>
+</body>
+</html>

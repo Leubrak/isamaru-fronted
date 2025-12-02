@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Registro - ISAMARU</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css" rel="stylesheet" />
+  <link rel="icon" href="ISAMARU PNG.png" type="image/x-icon" />
+
+  <style>
+    :root {
+      --primary-color: #41D0E7;
+      --accent-color: #2855A8;
+    }
+
+    #particles-js {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      background-color: #F5FCFD;
+    }
+
+    body {
+      background: transparent;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 100px;
+      min-height: 100vh;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .navbar {
+      width: 100%;
+      background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+    }
+
+    .navbar-brand {
+      font-weight: bold;
+      color: white !important;
+      font-size: 1.7rem;
+    }
+
+    .form-container {
+      background-color: white;
+      border-radius: 8px;
+      padding: 30px;
+      width: 100%;
+      max-width: 425px;
+      text-align: center;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+      position: relative;
+      z-index: 1;
+    }
+    
+    .logo {
+      width: 120px;
+      height: 120px;
+      margin-bottom: 20px;
+    }
+    
+    .title {
+      font-size: 20px;
+      font-weight: 500;
+      margin-bottom: 25px;
+      color: #333;
+    }
+    
+    .form-control {
+      border-radius: 4px;
+      padding: 20px;
+      margin-bottom: auto;
+    }
+    
+    .btn-ingresar {
+      background-color: #41D0E7;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      padding: 12px;
+      width: 100%;
+      font-weight: 500;
+      margin-top: 10px;
+      transition: background-color 0.3s ease;
+    }
+    
+    .btn-ingresar:hover {
+      background-color: #35b6ca;
+    }
+    
+    .input-group-text {
+      background-color: #73d3e2;
+      border-right: none;
+    }
+    
+    .input-with-icon .form-control {
+      border-left: none;
+    }
+
+    .alert {
+      margin-top: 15px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div id="particles-js"></div>
+
+  <nav class="navbar navbar-expand-lg fixed-top">
+    <div class="container">
+      <a class="navbar-brand" href="#">ISAMARU</a>
+    </div>
+  </nav>
+
+  <div class="form-container">
+    <img src="ISAMARU PNG.png" alt="ISAMARU Logo" class="logo">
+    
+    <h1 class="title">REGÍSTRATE</h1>
+    
+    <!-- Alertas -->
+    <div id="alertSuccess" class="alert alert-success" role="alert"></div>
+    <div id="alertError" class="alert alert-danger" role="alert"></div>
+    
+    <form id="registroForm">
+      <div class="input-group input-with-icon mb-3">
+        <span class="input-group-text">
+          <i class="bi bi-person"></i>
+        </span>
+        <input 
+          type="text" 
+          class="form-control" 
+          id="nombre" 
+          placeholder="Nombre Completo" 
+          required
+        >
+      </div>
+
+      <div class="input-group input-with-icon mb-3">
+        <span class="input-group-text">
+          <i class="bi bi-envelope"></i>
+        </span>
+        <input 
+          type="email" 
+          class="form-control" 
+          id="correo" 
+          placeholder="Correo Electrónico" 
+          required
+        >
+      </div>
+
+      <div class="input-group input-with-icon mb-3">
+        <span class="input-group-text">
+          <i class="bi bi-person-badge"></i>
+        </span>
+        <input 
+          type="text" 
+          class="form-control" 
+          id="usuario" 
+          placeholder="Nombre de Usuario" 
+          required
+        >
+      </div>
+      
+      <div class="input-group input-with-icon mb-3">
+        <span class="input-group-text">
+          <i class="bi bi-lock"></i>
+        </span>
+        <input 
+          type="password" 
+          class="form-control" 
+          id="contrasena" 
+          placeholder="Contraseña" 
+          required
+        >
+      </div>
+
+      <div class="input-group input-with-icon mb-3">
+        <span class="input-group-text">
+          <i class="bi bi-lock-fill"></i>
+        </span>
+        <input 
+          type="password" 
+          class="form-control" 
+          id="confirmarContrasena" 
+          placeholder="Confirmar Contraseña" 
+          required
+        >
+      </div>
+
+      <p class="mb-0 text-muted">
+        ¿Ya tienes una cuenta? <a href="sing-in-reorganizado.html">INICIA SESIÓN</a>
+      </p>
+      
+      <button type="submit" class="btn btn-ingresar" id="btnRegistro">
+        <span id="btnText">REGISTRARSE</span>
+        <span id="btnSpinner" class="spinner-border spinner-border-sm d-none" role="status"></span>
+      </button>
+    </form>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+
+  <script>
+    // ===== CONFIGURACIÓN API =====
+    const API_URL = 'http://localhost:3000';
+
+    // ===== PARTÍCULAS =====
+    particlesJS("particles-js", {
+      "particles": {
+        "number": { "value": 60 },
+        "color": { "value": "#41D0E7" },
+        "shape": { "type": "circle" },
+        "opacity": { "value": 0.4 },
+        "size": { "value": 4, "random": true },
+        "line_linked": {
+          "enable": true,
+          "distance": 150,
+          "color": "#41D0E7",
+          "opacity": 0.3,
+          "width": 1
+        },
+        "move": {
+          "enable": true,
+          "speed": 2,
+          "direction": "none",
+          "out_mode": "out"
+        }
+      }
+    });
+
+    // ===== MANEJO DEL FORMULARIO =====
+    document.getElementById('registroForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const btnRegistro = document.getElementById('btnRegistro');
+      const btnText = document.getElementById('btnText');
+      const btnSpinner = document.getElementById('btnSpinner');
+      const alertSuccess = document.getElementById('alertSuccess');
+      const alertError = document.getElementById('alertError');
+
+      const nombre = document.getElementById('nombre').value.trim();
+      const correo = document.getElementById('correo').value.trim();
+      const usuario = document.getElementById('usuario').value.trim();
+      const contrasena = document.getElementById('contrasena').value;
+      const confirmarContrasena = document.getElementById('confirmarContrasena').value;
+
+      // Ocultar alertas previas
+      alertSuccess.style.display = 'none';
+      alertError.style.display = 'none';
+
+      // Validaciones
+      if (!nombre || !correo || !usuario || !contrasena || !confirmarContrasena) {
+        mostrarError('Por favor completa todos los campos');
+        return;
+      }
+
+      if (contrasena !== confirmarContrasena) {
+        mostrarError('Las contraseñas no coinciden');
+        return;
+      }
+
+      if (contrasena.length < 6) {
+        mostrarError('La contraseña debe tener al menos 6 caracteres');
+        return;
+      }
+
+      // Deshabilitar botón y mostrar spinner
+      btnRegistro.disabled = true;
+      btnText.classList.add('d-none');
+      btnSpinner.classList.remove('d-none');
+
+      try {
+        // Hacer petición al backend
+        const response = await fetch(`${API_URL}/auth/registro`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            nombre,
+            correo,
+            usuario,
+            contrasena,
+            rol: 'usuario' // Por defecto, crear como usuario normal
+          })
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.success) {
+          // Registro exitoso
+          mostrarExito('¡Registro exitoso! Redirigiendo al login...');
+
+          // Limpiar formulario
+          document.getElementById('registroForm').reset();
+
+          // Redireccionar después de 2 segundos
+          setTimeout(() => {
+            window.location.href = 'sing-in-reorganizado.html';
+          }, 2000);
+
+        } else {
+          // Error en el registro
+          mostrarError(data.error || 'Error al registrar usuario');
+          btnRegistro.disabled = false;
+          btnText.classList.remove('d-none');
+          btnSpinner.classList.add('d-none');
+        }
+
+      } catch (error) {
+        console.error('Error:', error);
+        mostrarError('Error al conectar con el servidor. Verifica que el backend esté corriendo.');
+        btnRegistro.disabled = false;
+        btnText.classList.remove('d-none');
+        btnSpinner.classList.add('d-none');
+      }
+    });
+
+    // ===== FUNCIONES AUXILIARES =====
+    function mostrarExito(mensaje) {
+      const alertSuccess = document.getElementById('alertSuccess');
+      alertSuccess.textContent = mensaje;
+      alertSuccess.style.display = 'block';
+    }
+
+    function mostrarError(mensaje) {
+      const alertError = document.getElementById('alertError');
+      alertError.textContent = mensaje;
+      alertError.style.display = 'block';
+    }
+  </script>
+</body>
+</html>

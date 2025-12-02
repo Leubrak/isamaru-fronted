@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Speedy School Restaurant</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+  <link rel="icon" href="ISAMARU PNG.png" type="image/x-icon" />
+
+  <style>
+    :root {
+      --primary-color: #41D0E7;
+      --primary-dark: #2596A8;
+      --accent-color: #2855A8;
+      --light-bg: #F5FCFD;
+    }
+
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: transparent;
+    }
+
+    /* Fondo partículas */
+    #particles-js {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      top: 0;
+      left: 0;
+    }
+
+    .navbar {
+      background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .nav-link {
+      color: #ffffff;
+      font-weight: 500;
+    }
+
+    .nav-link:hover,
+    .nav-link.active {
+      color: var(--primary-dark);
+    }
+
+    .hero-section {
+      min-height: calc(100vh - 140px);
+      display: flex;
+      align-items: center;
+      padding-top: 40px;
+      padding-bottom: 40px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+      border: none;
+    }
+
+    .btn-outline-primary {
+      border: 2px solid var(--primary-color);
+      color: var(--accent-color);
+    }
+
+    .btn-outline-primary:hover {
+      background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+      color: white;
+    }
+
+    .footer {
+      background-color: white;
+      border-top: 1px solid rgba(0, 0, 0, 0.05);
+      color: #666;
+      position: relative;
+      z-index: 1;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- FONDO DE PARTÍCULAS -->
+  <div id="particles-js"></div>
+
+  <nav class="navbar navbar-expand-lg sticky-top">
+    <div class="container">
+      <a class="navbar-brand fw-bold text-white" href="#">ISAMARU</a>
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link active" href="interfaz-principal.html"><i class="bi bi-house-door"></i> Inicio</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="perfil-usuario.html"><i class="bi bi-person-circle"></i> Perfil</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <section class="hero-section">
+    <div class="container">
+      <div class="row align-items-center">
+
+        <div class="col-md-6 text-center text-md-start">
+          <h1 class="fw-bold display-5 mb-3">Bienvenido a ISAMARU</h1>
+          <p class="lead mb-4">Una herramienta eficaz para optimizar la gestión de los restaurantes.</p>
+          <div class="d-flex flex-wrap gap-3">
+            <a href="reportes.html" class="btn btn-primary px-4 py-2"><i class="bi bi-calendar-plus"></i> Reportes</a>
+            <a href="inventario-alimentos.html" class="btn btn-outline-primary px-4 py-2"><i class="bi bi-card-list"></i> Inventario</a>
+          </div>
+        </div>
+
+        <div class="col-md-6 text-center mt-4 mt-md-0">
+          <img src="ISAMARU PNG.png" class="img-fluid" alt="Restaurant Logo" style="max-height: 280px" />
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer py-4">
+    <div class="container">
+      <div class="row">
+
+        <div class="col-md-6">
+          <p class="mb-0">© 2025 ISAMARU.</p>
+        </div>
+
+        <div class="col-md-6 text-md-end">
+          <a href="#" class="text-decoration-none me-3 text-muted"><i class="bi bi-facebook"></i></a>
+          <a href="#" class="text-decoration-none me-3 text-muted"><i class="bi bi-instagram"></i></a>
+          <a href="#" class="text-decoration-none text-muted"><i class="bi bi-whatsapp"></i></a>
+        </div>
+
+      </div>
+    </div>
+  </footer>
+
+<script>
+particlesJS("particles-js", {
+  "particles": {
+    "number": { "value": 60 },
+    "color": { "value": "#41D0E7" },
+    "shape": { "type": "circle" },
+    "opacity": { "value": 0.5 },
+    "size": { "value": 3 },
+    "line_linked": {
+      "enable": true,
+      "distance": 150,
+      "color": "#41D0E7",
+      "opacity": 0.4,
+      "width": 1
+    },
+    "move": {
+      "enable": true,
+      "speed": 3,
+      "bounce": true
+    }
+  },
+  "interactivity": {
+    "detect_on": "canvas",
+    "events": {
+      "onhover": { "enable": true, "mode": "repulse" },
+      "onclick": { "enable": true, "mode": "push" }
+    },
+    "modes": {
+      "repulse": { "distance": 100 },
+      "push": { "particles_nb": 4 }
+    }
+  },
+  "retina_detect": true
+});
+</script>
+
+</body>
+</html>
