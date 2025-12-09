@@ -9,6 +9,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css" rel="stylesheet">
     <link rel="icon" href="ISAMARU PNG.png" type="image/x-icon" />
     <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <style>
         :root {
@@ -31,11 +32,13 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            padding-bottom: 60px; /* Espacio para el footer fijo */
         }
 
         .content-wrapper {
             position: relative;
             z-index: 10;
+            flex: 1;
         }
 
         .navbar {
@@ -81,6 +84,84 @@
             color: white;
         }
 
+        .tab:hover:not(.active) {
+            background: rgba(65, 208, 231, 0.1);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* BOTÓN FLOTANTE - Mejorado y más visible */
+        .btn-float {
+            position: fixed;
+            bottom: 100px;  /* Más arriba del footer */
+            right: 40px;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+            border: none;
+            box-shadow: 0 6px 25px rgba(17, 153, 142, 0.6);
+            font-size: 32px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-float:hover {
+            transform: scale(1.15) rotate(90deg);
+            box-shadow: 0 8px 35px rgba(17, 153, 142, 0.8);
+        }
+
+        .modal-content {
+            border-radius: 12px;
+            border: none;
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            color: white;
+            border-radius: 12px 12px 0 0;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(65, 208, 231, 0.25);
+        }
+
+        .badge-custom {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: 500;
+        }
+
+        .alert-custom {
+            border-radius: 8px;
+            border-left: 4px solid;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
         .feature-icon {
             width: 60px;
             height: 60px;
@@ -93,13 +174,16 @@
             font-size: 24px;
         }
 
-        .hidden {
-            display: none;
-        }
-
-        .spinner-border-sm {
-            width: 1.5rem;
-            height: 1.5rem;
+        /* FOOTER FIJO */
+        .footer {
+            background-color: white;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+            color: #666;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            z-index: 100;
+            padding: 15px 0;
         }
     </style>
 </head>
@@ -154,7 +238,7 @@ particlesJS("particles-js", {
         </div>
     </nav>
 
-    <div class="container py-4 flex-grow-1">
+    <div class="container py-4">
 
         <div class="tabs mb-4 d-flex">
             <div class="tab active" onclick="showTab('reportes')">
@@ -168,9 +252,20 @@ particlesJS("particles-js", {
 
         <div class="content">
 
-            <!-- REPORTES -->
+            <!-- REPORTES DE CONSUMO -->
             <div id="reportes">
                 <h2 class="fw-bold mb-4">Reportes de Consumo</h2>
+
+                <!-- Mensajes -->
+                <div id="alertaExito" class="alert alert-success alert-custom d-none" role="alert">
+                    <i class="bi bi-check-circle-fill me-2"></i>
+                    <span id="mensajeExito"></span>
+                </div>
+
+                <div id="alertaError" class="alert alert-danger alert-custom d-none" role="alert">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                    <span id="mensajeError"></span>
+                </div>
 
                 <!-- Estadísticas -->
                 <div class="row mb-4">
@@ -239,9 +334,19 @@ particlesJS("particles-js", {
                 </div>
             </div>
 
-            <!-- CALIDAD -->
+            <!-- REVISIÓN DE CALIDAD -->
             <div id="calidad" class="hidden">
-                <h2 class="fw-bold mb-4">Revisiones de Calidad</h2>
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2 class="fw-bold">Revisiones de Calidad</h2>
+                    <button class="btn btn-outline-primary" onclick="window.location.href='historial-calidad.html'">
+                        <i class="bi bi-clock-history"></i> Ver Historial Completo
+                    </button>
+                </div>
+
+                <div id="alertaExitoCalidad" class="alert alert-success alert-custom d-none" role="alert">
+                    <i class="bi bi-check-circle-fill me-2"></i>
+                    <span id="mensajeExitoCalidad"></span>
+                </div>
 
                 <div id="loadingCalidad" class="text-center py-4">
                     <div class="spinner-border text-primary" role="status"></div>
@@ -253,39 +358,181 @@ particlesJS("particles-js", {
 
         </div>
     </div>
-
-    <footer class="footer py-4 bg-white border-top mt-auto">
-        <div class="container text-center">
-            <p class="mb-0 text-muted">© 2025 ISAMARU.</p>
-        </div>
-    </footer>
-
 </div>
+
+<!-- FOOTER FIJO -->
+<footer class="footer">
+    <div class="container text-center">
+        <p class="mb-0 text-muted">© 2025 ISAMARU.</p>
+    </div>
+</footer>
+
+<!-- BOTÓN FLOTANTE (cambia según el tab) -->
+<button class="btn-float" id="btnFloat" onclick="abrirModal()" title="Registrar consumo">
+    <i class="bi bi-plus-lg"></i>
+</button>
+
+<!-- MODAL: REGISTRAR CONSUMO -->
+<div class="modal fade" id="modalConsumo" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="bi bi-clipboard-plus"></i> Registrar Nuevo Consumo
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="formConsumo">
+                    <div class="mb-3">
+                        <label for="productoSelect" class="form-label">Producto *</label>
+                        <select class="form-select" id="productoSelect" required>
+                            <option value="">Seleccione un producto...</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="cantidadConsumo" class="form-label">Cantidad Consumida *</label>
+                        <input type="number" class="form-control" id="cantidadConsumo" step="0.01" min="0.01" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="motivoConsumo" class="form-label">Motivo *</label>
+                        <select class="form-select" id="motivoConsumo" required>
+                            <option value="">Seleccione un motivo...</option>
+                            <option value="Venta">🛒 Venta</option>
+                            <option value="Merma">📉 Merma</option>
+                            <option value="Uso interno">🍽️ Uso Interno</option>
+                            <option value="Donación">🎁 Donación</option>
+                            <option value="Otro">📋 Otro</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="notasConsumo" class="form-label">Notas (Opcional)</label>
+                        <textarea class="form-control" id="notasConsumo" rows="2" placeholder="Detalles adicionales..."></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" onclick="registrarConsumo()">
+                    <i class="bi bi-check-lg"></i> Registrar Consumo
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL: NUEVA REVISIÓN -->
+<div class="modal fade" id="modalRevision" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="bi bi-clipboard-check"></i> Nueva Revisión de Calidad
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="formRevision">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="productoRevision" class="form-label">Producto a Revisar *</label>
+                            <select class="form-select" id="productoRevision" required>
+                                <option value="">Seleccione un producto...</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="cantidadRevisada" class="form-label">Cantidad Revisada *</label>
+                            <input type="number" class="form-control" id="cantidadRevisada" step="0.01" min="0.01" required>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="fechaRecepcion" class="form-label">Fecha Recepción *</label>
+                            <input type="date" class="form-control" id="fechaRecepcion" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="inspectorNombre" class="form-label">Inspector *</label>
+                            <select class="form-select" id="inspectorNombre" required>
+                                <option value="">Seleccione un inspector...</option>
+                                <option value="María López">👩‍🔬 María López</option>
+                                <option value="Juan Pérez">👨‍🔬 Juan Pérez</option>
+                                <option value="Carlos Ramírez">👨‍🔬 Carlos Ramírez</option>
+                                <option value="Ana García">👩‍🔬 Ana García</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="defectosEncontrados" class="form-label">Defectos Encontrados</label>
+                        <input type="number" class="form-control" id="defectosEncontrados" value="0" min="0">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="observacionesRevision" class="form-label">Observaciones</label>
+                        <textarea class="form-control" id="observacionesRevision" rows="3" placeholder="Observaciones sobre la inspección..."></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" onclick="crearRevision()">
+                    <i class="bi bi-check-lg"></i> Crear Revisión
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 
 <script>
     const API_URL = 'http://localhost:3000';
+    let tabActual = 'reportes'; // Variable para saber en qué tab estamos
 
-    // ===== CAMBIAR ENTRE TABS =====
+    // ========================================
+    // CAMBIAR ENTRE TABS
+    // ========================================
     function showTab(tabName) {
+        tabActual = tabName; // Actualizar tab actual
+        
         document.getElementById('reportes').classList.add('hidden');
         document.getElementById('calidad').classList.add('hidden');
-
         document.getElementById(tabName).classList.remove('hidden');
 
         const tabs = document.querySelectorAll('.tab');
         tabs.forEach(tab => tab.classList.remove('active'));
+        event.target.closest('.tab').classList.add('active');
 
+        // Cambiar tooltip del botón
+        const btnFloat = document.getElementById('btnFloat');
         if (tabName === 'reportes') {
-            tabs[0].classList.add('active');
+            btnFloat.title = "Registrar nuevo consumo";
             cargarEstadisticas();
             cargarConsumos();
         } else {
-            tabs[1].classList.add('active');
+            btnFloat.title = "Nueva revisión de calidad";
             cargarRevisiones();
         }
     }
 
-    // ===== CARGAR ESTADÍSTICAS =====
+    // ========================================
+    // ABRIR MODAL SEGÚN EL TAB ACTIVO
+    // ========================================
+    function abrirModal() {
+        if (tabActual === 'reportes') {
+            new bootstrap.Modal(document.getElementById('modalConsumo')).show();
+        } else {
+            new bootstrap.Modal(document.getElementById('modalRevision')).show();
+        }
+    }
+
+    // ========================================
+    // CARGAR ESTADÍSTICAS
+    // ========================================
     async function cargarEstadisticas() {
         try {
             const response = await fetch(`${API_URL}/reportes/estadisticas`);
@@ -295,13 +542,14 @@ particlesJS("particles-js", {
             document.getElementById('productosActivos').textContent = data.productos_activos || 0;
             document.getElementById('alertasActivas').textContent = data.alertas_activas || 0;
             document.getElementById('porCaducar').textContent = data.productos_por_caducar || 0;
-
         } catch (error) {
-            console.error('Error al cargar estadísticas:', error);
+            console.error('Error:', error);
         }
     }
 
-    // ===== CARGAR CONSUMOS =====
+    // ========================================
+    // CARGAR HISTORIAL DE CONSUMOS
+    // ========================================
     async function cargarConsumos() {
         const loading = document.getElementById('loadingConsumos');
         const tabla = document.getElementById('tablaConsumos');
@@ -317,19 +565,25 @@ particlesJS("particles-js", {
             tbody.innerHTML = '';
 
             if (consumos.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted">No hay consumos registrados</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted py-4">No hay consumos registrados</td></tr>';
             } else {
                 consumos.forEach(consumo => {
-                    const fecha = new Date(consumo.fecha_consumo).toLocaleDateString('es-CO');
+                    const fecha = new Date(consumo.fecha_consumo).toLocaleDateString('es-CO', {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
                     
                     tbody.innerHTML += `
                         <tr>
                             <td>${fecha}</td>
                             <td>${consumo.usuario || 'N/A'}</td>
-                            <td>${consumo.alimento || 'N/A'}</td>
-                            <td>${consumo.cantidad || 0}</td>
-                            <td><span class="badge bg-info">${consumo.categoria || 'N/A'}</span></td>
-                            <td>${consumo.motivo || 'N/A'}</td>
+                            <td>${consumo.alimento || consumo.producto_nombre || 'N/A'}</td>
+                            <td>${consumo.cantidad || consumo.cantidad_consumida || 0} ${consumo.unidad || ''}</td>
+                            <td><span class="badge bg-info badge-custom">${consumo.categoria || 'N/A'}</span></td>
+                            <td><span class="badge bg-${getMotivoColor(consumo.motivo)} badge-custom">${consumo.motivo || 'N/A'}</span></td>
                         </tr>
                     `;
                 });
@@ -337,16 +591,106 @@ particlesJS("particles-js", {
 
             loading.classList.add('d-none');
             tabla.classList.remove('d-none');
-
         } catch (error) {
-            console.error('Error al cargar consumos:', error);
+            console.error('Error:', error);
             tbody.innerHTML = '<tr><td colspan="6" class="text-center text-danger">Error al cargar datos</td></tr>';
             loading.classList.add('d-none');
             tabla.classList.remove('d-none');
         }
     }
 
-    // ===== CARGAR REVISIONES DE CALIDAD =====
+    // ========================================
+    // CARGAR PRODUCTOS DISPONIBLES
+    // ========================================
+    async function cargarProductosDisponibles() {
+        try {
+            const response = await fetch(`${API_URL}/productos`);
+            const data = await response.json();
+            const productos = data.data || [];
+
+            const select = document.getElementById('productoSelect');
+            const selectRevision = document.getElementById('productoRevision');
+            
+            select.innerHTML = '<option value="">Seleccione un producto...</option>';
+            selectRevision.innerHTML = '<option value="">Seleccione un producto...</option>';
+            
+            productos.filter(p => p.estado === 'activo' && p.cantidad > 0).forEach(p => {
+                const option = `
+                    <option value="${p.id_producto}" 
+                            data-nombre="${p.nombre}"
+                            data-unidad="${p.unidad || ''}"
+                            data-categoria="${p.categoria || 'General'}"
+                            data-cantidad="${p.cantidad}">
+                        ${p.nombre} (${p.cantidad} ${p.unidad || 'uds'} disponibles)
+                    </option>
+                `;
+                select.innerHTML += option;
+                selectRevision.innerHTML += option;
+            });
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
+    // ========================================
+    // REGISTRAR CONSUMO
+    // ========================================
+    async function registrarConsumo() {
+        const select = document.getElementById('productoSelect');
+        const option = select.options[select.selectedIndex];
+        
+        if (!option.value) {
+            mostrarError('Debe seleccionar un producto');
+            return;
+        }
+
+        const cantidadSolicitada = parseFloat(document.getElementById('cantidadConsumo').value);
+        const cantidadDisponible = parseFloat(option.dataset.cantidad);
+
+        if (cantidadSolicitada > cantidadDisponible) {
+            mostrarError(`No hay suficiente stock. Disponible: ${cantidadDisponible} ${option.dataset.unidad}`);
+            return;
+        }
+
+        const consumo = {
+            id_usuario: 1,
+            id_producto: select.value,
+            cantidad_consumida: cantidadSolicitada,
+            unidad: option.dataset.unidad,
+            categoria: option.dataset.categoria,
+            motivo: document.getElementById('motivoConsumo').value,
+            usuario_nombre: 'Usuario Actual',
+            producto_nombre: option.dataset.nombre,
+            notas: document.getElementById('notasConsumo').value
+        };
+
+        try {
+            const response = await fetch(`${API_URL}/reportes/consumos`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(consumo)
+            });
+
+            if (response.ok) {
+                mostrarExito('✅ Consumo registrado exitosamente');
+                bootstrap.Modal.getInstance(document.getElementById('modalConsumo')).hide();
+                document.getElementById('formConsumo').reset();
+                cargarConsumos();
+                cargarEstadisticas();
+                cargarProductosDisponibles();
+            } else {
+                const error = await response.json();
+                mostrarError(`Error: ${error.error}`);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            mostrarError('Error al registrar consumo');
+        }
+    }
+
+    // ========================================
+    // CARGAR REVISIONES DE CALIDAD
+    // ========================================
     async function cargarRevisiones() {
         const loading = document.getElementById('loadingCalidad');
         const container = document.getElementById('revisionesContainer');
@@ -368,7 +712,7 @@ particlesJS("particles-js", {
                             <div class="card h-100">
                                 <div class="card-body">
                                     <div class="d-flex justify-content-between mb-3">
-                                        <h3 class="card-title">${revision.nombre_producto}</h3>
+                                        <h5 class="card-title">${revision.nombre_producto}</h5>
                                         <div class="feature-icon">${revision.icono || '📦'}</div>
                                     </div>
 
@@ -377,7 +721,7 @@ particlesJS("particles-js", {
                                     <p><strong>Inspector:</strong> ${revision.inspector || 'N/A'}</p>
                                     <p><strong>Estado:</strong> <span class="badge bg-warning">${revision.estado}</span></p>
 
-                                    <div class="d-flex gap-2">
+                                    <div class="d-flex gap-2 mt-3">
                                         <button class="btn btn-success" onclick="actualizarRevision(${revision.id_revision}, 'aceptado')">
                                             <i class="bi bi-check-circle"></i> Aceptar
                                         </button>
@@ -393,16 +737,99 @@ particlesJS("particles-js", {
             }
 
             loading.classList.add('d-none');
-
         } catch (error) {
-            console.error('Error al cargar revisiones:', error);
+            console.error('Error:', error);
             container.innerHTML = '<div class="col-12 text-center text-danger py-5"><p>Error al cargar revisiones</p></div>';
             loading.classList.add('d-none');
         }
     }
 
-    // ===== ACTUALIZAR REVISIÓN =====
+    // ========================================
+    // CREAR NUEVA REVISIÓN
+    // ========================================
+    async function crearRevision() {
+        const select = document.getElementById('productoRevision');
+        const option = select.options[select.selectedIndex];
+
+        if (!option.value) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Producto requerido',
+                text: 'Debe seleccionar un producto',
+                confirmButtonColor: '#41D0E7'
+            });
+            return;
+        }
+
+        const revision = {
+            id_producto: select.value,
+            nombre_producto: option.dataset.nombre,
+            cantidad_revisada: parseFloat(document.getElementById('cantidadRevisada').value),
+            unidad: option.dataset.unidad,
+            fecha_recepcion: document.getElementById('fechaRecepcion').value,
+            inspector: document.getElementById('inspectorNombre').value,
+            estado: 'pendiente',
+            observaciones: document.getElementById('observacionesRevision').value,
+            defectos_encontrados: parseInt(document.getElementById('defectosEncontrados').value) || 0,
+            categoria: option.dataset.categoria,
+            icono: getIconoCategoria(option.dataset.categoria)
+        };
+
+        try {
+            const response = await fetch(`${API_URL}/calidad/revisiones`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(revision)
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                await Swal.fire({
+                    icon: 'success',
+                    title: '¡Éxito!',
+                    text: 'Revisión creada exitosamente',
+                    confirmButtonColor: '#41D0E7'
+                });
+                bootstrap.Modal.getInstance(document.getElementById('modalRevision')).hide();
+                document.getElementById('formRevision').reset();
+                cargarRevisiones();
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: data.error,
+                    confirmButtonColor: '#41D0E7'
+                });
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Error al crear revisión',
+                confirmButtonColor: '#41D0E7'
+            });
+        }
+    }
+
+    // ========================================
+    // ACTUALIZAR REVISIÓN
+    // ========================================
     async function actualizarRevision(id, estado) {
+        const result = await Swal.fire({
+            title: '¿Estás seguro?',
+            text: `¿Deseas ${estado === 'aceptado' ? 'ACEPTAR' : 'RECHAZAR'} esta revisión?`,
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: estado === 'aceptado' ? '#28a745' : '#dc3545',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: estado === 'aceptado' ? 'Sí, aceptar' : 'Sí, rechazar',
+            cancelButtonText: 'Cancelar'
+        });
+
+        if (!result.isConfirmed) return;
+
         try {
             const response = await fetch(`${API_URL}/calidad/revisiones/${id}`, {
                 method: 'PUT',
@@ -417,21 +844,56 @@ particlesJS("particles-js", {
             const data = await response.json();
 
             if (data.success) {
-                alert(`✅ Revisión ${estado} exitosamente`);
+                await Swal.fire({
+                    icon: 'success',
+                    title: '¡Éxito!',
+                    text: data.mensaje,
+                    confirmButtonColor: '#41D0E7'
+                });
                 cargarRevisiones();
             } else {
-                alert('❌ Error al actualizar revisión');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Error al actualizar revisión',
+                    confirmButtonColor: '#41D0E7'
+                });
             }
-
         } catch (error) {
             console.error('Error:', error);
-            alert('❌ Error al conectar con el servidor');
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Error al conectar con el servidor',
+                confirmButtonColor: '#41D0E7'
+            });
         }
     }
 
-    // ===== RECHAZAR REVISIÓN =====
+    // ========================================
+    // RECHAZAR REVISIÓN
+    // ========================================
     async function rechazarRevision(id) {
-        const motivo = prompt('Describe el motivo del rechazo:');
+        const { value: motivo } = await Swal.fire({
+            title: '❌ Rechazar Revisión',
+            input: 'textarea',
+            inputLabel: 'Describe el motivo del rechazo:',
+            inputPlaceholder: 'Ejemplo: Producto en mal estado, vencido, etc.',
+            inputAttributes: {
+                'aria-label': 'Motivo del rechazo'
+            },
+            showCancelButton: true,
+            confirmButtonText: 'Rechazar',
+            cancelButtonText: 'Cancelar',
+            confirmButtonColor: '#dc3545',
+            cancelButtonColor: '#6c757d',
+            inputValidator: (value) => {
+                if (!value) {
+                    return 'Debes escribir un motivo de rechazo';
+                }
+            }
+        });
+
         if (!motivo) return;
 
         try {
@@ -448,26 +910,87 @@ particlesJS("particles-js", {
             const data = await response.json();
 
             if (data.success) {
-                alert('✅ Revisión rechazada exitosamente');
+                await Swal.fire({
+                    icon: 'success',
+                    title: '¡Revisión rechazada!',
+                    text: data.mensaje,
+                    confirmButtonColor: '#41D0E7'
+                });
                 cargarRevisiones();
             } else {
-                alert('❌ Error al actualizar revisión');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Error al actualizar revisión',
+                    confirmButtonColor: '#41D0E7'
+                });
             }
-
         } catch (error) {
             console.error('Error:', error);
-            alert('❌ Error al conectar con el servidor');
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Error al conectar con el servidor',
+                confirmButtonColor: '#41D0E7'
+            });
         }
     }
 
-    // ===== CARGAR DATOS AL INICIAR =====
+    // ========================================
+    // HELPERS
+    // ========================================
+    function getMotivoColor(motivo) {
+        const colores = {
+            'Venta': 'success',
+            'Merma': 'danger',
+            'Uso interno': 'info',
+            'Donación': 'warning',
+            'Otro': 'secondary'
+        };
+        return colores[motivo] || 'secondary';
+    }
+
+    function getIconoCategoria(categoria) {
+        const iconos = {
+            'Frutas': '🍎', 'Verduras': '🥕', 'Carnes': '🥩',
+            'Lácteos': '🥛', 'Granos': '🌾', 'Bebidas': '🧃',
+            'Conservas': '🥫', 'Congelados': '❄️', 'Panadería': '🍞',
+            'Condimentos': '🧂'
+        };
+        return iconos[categoria] || '📦';
+    }
+
+    function mostrarExito(mensaje) {
+        const div = document.getElementById('alertaExito');
+        document.getElementById('mensajeExito').textContent = mensaje;
+        div.classList.remove('d-none');
+        setTimeout(() => div.classList.add('d-none'), 3000);
+    }
+
+    function mostrarError(mensaje) {
+        const div = document.getElementById('alertaError');
+        document.getElementById('mensajeError').textContent = mensaje;
+        div.classList.remove('d-none');
+        setTimeout(() => div.classList.add('d-none'), 5000);
+    }
+
+    function mostrarExitoCalidad(mensaje) {
+        const div = document.getElementById('alertaExitoCalidad');
+        document.getElementById('mensajeExitoCalidad').textContent = mensaje;
+        div.classList.remove('d-none');
+        setTimeout(() => div.classList.add('d-none'), 3000);
+    }
+
+    // ========================================
+    // CARGAR DATOS AL INICIAR
+    // ========================================
     window.addEventListener('DOMContentLoaded', () => {
         cargarEstadisticas();
         cargarConsumos();
+        cargarProductosDisponibles();
+        document.getElementById('fechaRecepcion').valueAsDate = new Date();
     });
 </script>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 
 </body>
 </html>

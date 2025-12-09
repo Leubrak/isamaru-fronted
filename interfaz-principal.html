@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Speedy School Restaurant</title>
+  <title>ISAMARU - Dashboard</title>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet" />
   <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
@@ -14,9 +14,8 @@
       --primary-color: #41D0E7;
       --primary-dark: #2596A8;
       --accent-color: #2855A8;
-      --light-bg: #F5FCFD;
     }
-
+    
     html, body {
       height: 100%;
       margin: 0;
@@ -25,7 +24,6 @@
       background: transparent;
     }
 
-    /* Fondo partículas */
     #particles-js {
       position: fixed;
       width: 100%;
@@ -40,14 +38,50 @@
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
     }
 
-    .nav-link {
-      color: #ffffff;
-      font-weight: 500;
+    .navbar-brand {
+      color: white !important;
+      font-weight: 700;
+      font-size: 1.4rem;
     }
 
-    .nav-link:hover,
-    .nav-link.active {
-      color: var(--primary-dark);
+    .nav-link {
+      color: #ffffff !important;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+
+    .nav-link:hover {
+      opacity: 0.8;
+      transform: translateY(-2px);
+    }
+
+    /* Badge de notificaciones */
+    .nav-item {
+      position: relative;
+    }
+
+    .badge-notify {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: #dc3545;
+      color: white;
+      border-radius: 50%;
+      min-width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: bold;
+      padding: 0 5px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.15); }
     }
 
     .hero-section {
@@ -63,16 +97,94 @@
     .btn-primary {
       background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
       border: none;
+      transition: all 0.3s ease;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(65, 208, 231, 0.4);
     }
 
     .btn-outline-primary {
       border: 2px solid var(--primary-color);
       color: var(--accent-color);
+      transition: all 0.3s ease;
     }
 
     .btn-outline-primary:hover {
       background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
       color: white;
+      transform: translateY(-2px);
+    }
+
+    /* Widget de Alertas (Bottom Right) */
+    .alertas-widget {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 1000;
+      max-width: 350px;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .alert-toast {
+      background: white;
+      border-radius: 12px;
+      padding: 15px;
+      margin-bottom: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      border-left: 4px solid;
+      animation: slideInRight 0.4s ease;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .alert-toast:hover {
+      transform: translateX(-5px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+    }
+
+    @keyframes slideInRight {
+      from {
+        opacity: 0;
+        transform: translateX(100px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .alert-toast.danger {
+      border-left-color: #dc3545;
+    }
+
+    .alert-toast.warning {
+      border-left-color: #ffc107;
+    }
+
+    .alert-toast.info {
+      border-left-color: #17a2b8;
+    }
+
+    .alert-toast .close-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: none;
+      border: none;
+      font-size: 18px;
+      color: #999;
+      cursor: pointer;
+      line-height: 1;
+      padding: 0;
+      width: 20px;
+      height: 20px;
+    }
+
+    .alert-toast .close-btn:hover {
+      color: #333;
     }
 
     .footer {
@@ -87,12 +199,11 @@
 
 <body>
 
-  <!-- FONDO DE PARTÍCULAS -->
   <div id="particles-js"></div>
 
   <nav class="navbar navbar-expand-lg sticky-top">
     <div class="container">
-      <a class="navbar-brand fw-bold text-white" href="#">ISAMARU</a>
+      <a class="navbar-brand" href="interfaz-principal.html">ISAMARU</a>
 
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
         <span class="navbar-toggler-icon"></span>
@@ -101,10 +212,16 @@
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ms-auto">
           <li class="nav-item">
-            <a class="nav-link active" href="interfaz-principal.html"><i class="bi bi-house-door"></i> Inicio</a>
+            <a class="nav-link active" href="interfaz-principal.html">
+              <i class="bi bi-house-door"></i> Inicio
+            </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="perfil-usuario.html"><i class="bi bi-person-circle"></i> Perfil</a>
+            
+            
+            <a class="nav-link" href="perfil-usuario.html">
+              <i class="bi bi-person-circle"></i> Perfil
+            </a>
           </li>
         </ul>
       </div>
@@ -119,8 +236,12 @@
           <h1 class="fw-bold display-5 mb-3">Bienvenido a ISAMARU</h1>
           <p class="lead mb-4">Una herramienta eficaz para optimizar la gestión de los restaurantes.</p>
           <div class="d-flex flex-wrap gap-3">
-            <a href="reportes.html" class="btn btn-primary px-4 py-2"><i class="bi bi-calendar-plus"></i> Reportes</a>
-            <a href="inventario-alimentos.html" class="btn btn-outline-primary px-4 py-2"><i class="bi bi-card-list"></i> Inventario</a>
+            <a href="reportes.html" class="btn btn-primary px-4 py-2">
+              <i class="bi bi-calendar-plus"></i> Reportes
+            </a>
+            <a href="inventario-alimentos.html" class="btn btn-outline-primary px-4 py-2">
+              <i class="bi bi-card-list"></i> Inventario
+            </a>
           </div>
         </div>
 
@@ -132,25 +253,20 @@
     </div>
   </section>
 
+  <!-- Widget de Alertas (Bottom Right) -->
+  <div class="alertas-widget" id="alertasWidget"></div>
+
   <footer class="footer py-4">
-    <div class="container">
-      <div class="row">
+  <div class="container text-center">
+    <p class="mb-0">© 2025 ISAMARU.</p>
+  </div>
+</footer>
 
-        <div class="col-md-6">
-          <p class="mb-0">© 2025 ISAMARU.</p>
-        </div>
-
-        <div class="col-md-6 text-md-end">
-          <a href="#" class="text-decoration-none me-3 text-muted"><i class="bi bi-facebook"></i></a>
-          <a href="#" class="text-decoration-none me-3 text-muted"><i class="bi bi-instagram"></i></a>
-          <a href="#" class="text-decoration-none text-muted"><i class="bi bi-whatsapp"></i></a>
-        </div>
-
-      </div>
-    </div>
-  </footer>
 
 <script>
+// ========================================
+// PARTÍCULAS
+// ========================================
 particlesJS("particles-js", {
   "particles": {
     "number": { "value": 60 },
@@ -184,7 +300,85 @@ particlesJS("particles-js", {
   },
   "retina_detect": true
 });
+
+// ========================================
+// SISTEMA DE ALERTAS
+// ========================================
+const API_URL = 'http://localhost:3000';
+
+async function cargarAlertas() {
+  try {
+    const response = await fetch(`${API_URL}/productos/alertas/activas`);
+    const data = await response.json();
+
+    if (!data.success) return;
+
+    const alertas = data.alertas || [];
+    const badge = document.getElementById('navBadge');
+    const widget = document.getElementById('alertasWidget');
+
+    // Actualizar badge
+    if (alertas.length > 0) {
+      badge.textContent = alertas.length;
+      badge.style.display = 'flex';
+    } else {
+      badge.style.display = 'none';
+    }
+
+    // Mostrar solo las 3 alertas más críticas
+    const alertasCriticas = alertas
+      .filter(a => a.nivel === 'danger' || a.nivel === 'warning')
+      .slice(0, 3);
+
+    widget.innerHTML = alertasCriticas.map(alerta => crearAlertaToast(alerta)).join('');
+
+  } catch (error) {
+    console.error('Error al cargar alertas:', error);
+  }
+}
+
+function crearAlertaToast(alerta) {
+  const iconos = {
+    'danger': '🚨',
+    'warning': '⚠️',
+    'info': 'ℹ️'
+  };
+
+  return `
+    <div class="alert-toast ${alerta.nivel}" onclick="window.location.href='alertas.html'">
+      <button class="close-btn" onclick="event.stopPropagation(); marcarLeida(${alerta.id_alerta}, event)">&times;</button>
+      <div class="d-flex align-items-start">
+        <div class="me-3" style="font-size: 24px;">${iconos[alerta.nivel]}</div>
+        <div class="flex-grow-1">
+          <strong class="d-block mb-1">${alerta.producto_nombre}</strong>
+          <small class="text-muted">${alerta.mensaje}</small>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+async function marcarLeida(id, event) {
+  try {
+    await fetch(`${API_URL}/productos/alertas/${id}/leer`, {
+      method: 'PUT'
+    });
+    
+    // Recargar alertas
+    setTimeout(() => cargarAlertas(), 300);
+  } catch (error) {
+    console.error('Error al marcar alerta:', error);
+  }
+}
+
+// ========================================
+// CARGAR AL INICIAR Y AUTO-REFRESH
+// ========================================
+window.addEventListener('DOMContentLoaded', cargarAlertas);
+setInterval(cargarAlertas, 30000); // Cada 30 segundos
 </script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 
 </body>
 </html>
